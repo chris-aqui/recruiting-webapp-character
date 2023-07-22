@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React from 'react';
 import AttributeItem from './AttributeItem.jsx';
 import { useAttributes } from '../contexts/CharactersContext';
 
@@ -11,7 +11,6 @@ const Attributes = ({ defaultAttributeList }) => {
       <h2 className='text-1xl font-bold dark:text-white'>Attributes</h2>
       {defaultAttributeList.map((attribute) => {
         let attributeValue;
-        let handleChange;
         switch (attribute) {
           case 'Strength':
             attributeValue = attributes.strength;
@@ -33,7 +32,6 @@ const Attributes = ({ defaultAttributeList }) => {
             break;
           default:
             attributeValue = 10;
-            handleChange = () => { };
         }
         return (
           <AttributeItem
