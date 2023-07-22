@@ -1,23 +1,24 @@
 import { useState } from 'react';
 import './App.css';
+import Attributes from './components/Attributes';
+import Classes from './components/Classes';
 import { ATTRIBUTE_LIST, CLASS_LIST, SKILL_LIST } from './consts.js';
+import { AttributesProvider } from './contexts/CharactersContext';
 
 
 function App() {
-  const [num, setNum] = useState(0);
   return (
     <div className="App">
-      <header className="App-header">
-        <h1>React Coding Exercise</h1>
-      </header>
-      <section className="App-section">
-        <div>
-          Value:
-          {num}
-          <button>+</button>
-          <button>-</button>
-        </div>
-      </section>
+      <AttributesProvider>
+        <header className="App-header text-center px-2 py-2 md:px-4 md:py-4">
+          <h1 className="text-xl md:text-2xl lg:text-3xl">React Coding Exercise</h1>
+        </header>
+        <section className="App-section grid gap-4 grid-cols-1 md:grid-cols-2 lg:grid-cols-3 px-4 py-2 md:px-4 md:py-4">
+          <Attributes defaultAttributeList={ATTRIBUTE_LIST} />
+          <Classes defaultClassList={CLASS_LIST} />
+          <div>Skills here</div>
+        </section>
+      </AttributesProvider>
     </div>
   );
 }
