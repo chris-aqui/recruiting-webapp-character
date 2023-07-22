@@ -36,7 +36,7 @@ const Classes = ({ defaultClassList }) => {
 				{Object.keys(defaultClassList).map((characterClassName) => (
 					<div
 						key={characterClassName}
-						style={{ color: eligibleClasses.includes(characterClassName) ? 'green' : 'red' }}
+						className={`cursor-pointer ${eligibleClasses.includes(characterClassName) ? 'text-green-500' : 'text-red-500'}`}
 						onClick={() => displayMinimumStats(characterClassName)}
 					>
 						{characterClassName}
@@ -56,7 +56,7 @@ const Classes = ({ defaultClassList }) => {
 					))}
 					<button
 						type="button"
-						className="text-white bg-blue-700 hover:bg-blue-800 focus:outline-none focus:ring-4 focus:ring-blue-300 font-medium rounded-full text-sm px-5 py-2.5 text-center mr-2 mb-2 dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:ring-blue-800"
+						className="p-2 text-white bg-blue-700 hover:bg-blue-800 focus:outline-none focus:ring-4 focus:ring-blue-300 font-medium rounded-full text-sm px-5 py-2.5 text-center mr-2 mb-2 dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:ring-blue-800"
 						onClick={hideMinimumStats}
 					>
 						Close View

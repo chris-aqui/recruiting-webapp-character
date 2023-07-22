@@ -1,11 +1,18 @@
 import { calculateModifier } from '../utils/calculateModifier';
+
 const AttributeItem = ({
 	attributeName,
 	attributeValue,
 	handleIncrement,
 	handleDecrement,
 }) => {
-	const modifier = calculateModifier(attributeValue);
+	let modifier;
+	try {
+		modifier = calculateModifier(attributeValue);
+	} catch (error) {
+		console.error(error);
+		modifier = 0;
+	}
 
 	return (
 		<div className="p-1">
