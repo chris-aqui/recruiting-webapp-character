@@ -2,23 +2,27 @@ import { useEffect, useState } from 'react';
 import { calculateModifier } from '../utils/calculateModifier';
 
 const SkillItem = ({
-	attributes,
-	skills,
-	points,
+	skill,
 	skillName,
 	skillAttributeModifier,
 	skillIncrementSkill,
-	skillDecrementSkill
+	skillDecrementSkill,
+	characterName,
+	characterAttribute,
 }) => {
 
-	const [skillPoint, setSkillPoint] = useState(skills[skillName] || 0);
-	const [modifier, setModifier] = useState(calculateModifier(attributes, skillAttributeModifier));
-	const [total, setTotal] = useState(points + calculateModifier(attributes, skillAttributeModifier));
+
+	const [skillPoint, setSkillPoint] = useState(skill.points || 0);
+	const [modifier, setModifier] = useState(calculateModifier(characterAttribute, skill.attributeModifier));
+	const [total, setTotal] = useState(skill.points + calculateModifier(characterAttribute, skill.attributeModifier));
 
 	useEffect(() => {
-		setModifier(calculateModifier(attributes, skillAttributeModifier));
+		setModifier(calculateModifier(characterAttribute, skillAttributeModifier));
 		setTotal(skillPoint + modifier);
-	}, [skillPoint, attributes, skillAttributeModifier, modifier]);
+	}, [skillPoint, characterAttribute, skillAttributeModifier, modifier]);
+
+
+
 
 	return (
 		<div className='p-1'>
@@ -29,14 +33,14 @@ const SkillItem = ({
 				<button
 					type="button"
 					className='px-1 text-white bg-gray-800 hover:bg-gray-900 focus:outline-none focus:ring-4 focus:ring-gray-300 font-medium rounded-lg text-sm px-5 py-2.5 mr-2 mb-2 dark:bg-gray-800 dark:hover:bg-gray-700 dark:focus:ring-gray-700 dark:border-gray-700'
-					onClick={() => { skillIncrementSkill(skillName); setSkillPoint(skillPoint + 1); }}
+					onClick={() => { skillIncrementSkill(characterName, skillName); setSkillPoint(skillPoint + 1); }}
 				>
 					+
 				</button>
 				<button
 					type="button"
 					className='px-1 text-white bg-gray-800 hover:bg-gray-900 focus:outline-none focus:ring-4 focus:ring-gray-300 font-medium rounded-lg text-sm px-5 py-2.5 mr-2 mb-2 dark:bg-gray-800 dark:hover:bg-gray-700 dark:focus:ring-gray-700 dark:border-gray-700'
-					onClick={() => { skillDecrementSkill(skillName); setSkillPoint(skillPoint - 1); }}
+					onClick={() => { skillDecrementSkill(characterName, skillName); setSkillPoint(skillPoint - 1); }}
 				>
 					-
 				</button>

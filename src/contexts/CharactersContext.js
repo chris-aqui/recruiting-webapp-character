@@ -1,6 +1,4 @@
-import React, {
-	createContext, useState, useContext, useEffect,
-} from 'react';
+import React, { createContext, useState, useContext, useEffect } from 'react';
 import { calculateModifier } from '../utils/calculateModifier.js';
 
 const CharacterContext = createContext();
@@ -10,79 +8,256 @@ export function useCharacter() {
 }
 
 export function CharacterProvider({ children }) {
-	const [attributes, setAttributes] = useState({
-		strength: 10,
-		dexterity: 10,
-		constitution: 10,
-		intelligence: 10,
-		wisdom: 10,
-		charisma: 10,
-	});
+	const [characters, setCharacters] = useState([
+		{
+			characterName: 'character_1',
+			totalPoints: 18,
+			attributes: {
+				strength: 10,
+				dexterity: 10,
+				constitution: 10,
+				intelligence: 10,
+				wisdom: 10,
+				charisma: 10,
+			},
+			modifiers: {},
+			skills: {
+				"Acrobatics": {
+					"points": 0,
+					"attributeModifier": "Dexterity"
+				},
+				"Animal Handling": {
+					"points": 0,
+					"attributeModifier": "Wisdom"
+				},
+				"Arcana": {
+					"points": 0,
+					"attributeModifier": "Intelligence"
+				},
+				"Athletics": {
+					"points": 0,
+					"attributeModifier": "Strength"
+				},
+				"Deception": {
+					"points": 0,
+					"attributeModifier": "Charisma"
+				},
+				"History": {
+					"points": 0,
+					"attributeModifier": "Intelligence"
+				},
+				"Insight": {
+					"points": 0,
+					"attributeModifier": "Wisdom"
+				},
+				"Intimidation": {
+					"points": 0,
+					"attributeModifier": "Charisma"
+				},
+				"Investigation": {
+					"points": 0,
+					"attributeModifier": "Intelligence"
+				},
+				"Medicine": {
+					"points": 0,
+					"attributeModifier": "Wisdom"
+				},
+				"Nature": {
+					"points": 0,
+					"attributeModifier": "Intelligence"
+				},
+				"Perception": {
+					"points": 0,
+					"attributeModifier": "Wisdom"
+				},
+				"Performance": {
+					"points": 0,
+					"attributeModifier": "Charisma"
+				},
+				"Persuasion": {
+					"points": 0,
+					"attributeModifier": "Charisma"
+				},
+				"Religion": {
+					"points": 0,
+					"attributeModifier": "Intelligence"
+				},
+				"Sleight of Hand": {
+					"points": 0,
+					"attributeModifier": "Dexterity"
+				},
+				"Stealth": {
+					"points": 0,
+					"attributeModifier": "Dexterity"
+				},
+				"Survival": {
+					"points": 0,
+					"attributeModifier": "Wisdom"
+				},
+			},
+		},
+	]);
 
-	const [skills, setSkills] = useState({
-		"Acrobatics": 0,
-		"Animal Handling": 0,
-		"Athletics": 0,
-		"Deception": 0,
-		"History": 0,
-		"Insight": 0,
-		"Intimidation": 0,
-		"Investigation": 0,
-		"Medicine": 0,
-		"Nature": 0,
-		"Perception": 0,
-		"Performance": 0,
-		"Persuasion": 0,
-		"Religion": 0,
-		"Sleight of Hand": 0,
-		"Stealth": 0,
-		"Survival": 0,
+	const [characterModifiers, setCharacterModifiers] = useState(() => {
+		return characters.map((character) => {
+			const newModifiers = {};
+			for (const attribute in character.attributes) {
+				newModifiers[attribute] = calculateModifier(
+					character.attributes,
+					attribute
+				);
+			}
+			return { ...character, modifiers: newModifiers };
+		});
 	});
-	const [points, setPoints] = useState(10 + 4 * calculateModifier(attributes, 'intelligence'));
 
 	useEffect(() => {
-		setPoints(10 + 4 * calculateModifier(attributes, 'intelligence'));
-	}, [attributes.intelligence, attributes]);
-
-	const incrementAttribute = (attribute) => {
-		setAttributes({
-			...attributes,
-			[attribute]: attributes[attribute] + 1,
+		// Calculate the modifiers whenever characters change
+		const newCharacterModifiers = characters.map((character) => {
+			const newModifiers = {};
+			for (const attribute in character.attributes) {
+				newModifiers[attribute] = calculateModifier(
+					character.attributes,
+					attribute
+				);
+			}
+			return { ...character, modifiers: newModifiers };
 		});
-	};
 
-	const decrementAttribute = (attribute) => {
-		setAttributes({
-			...attributes,
-			[attribute]: Math.max(0, attributes[attribute] - 1),
+		// Update the characterModifiers state
+		setCharacterModifiers(newCharacterModifiers);
+	}, [characters]);
+
+	const incrementAttribute = (characterName, attribute) => {
+		const newCharacters = characters.map((character) => {
+			if (character.characterName === characterName) {
+				return {
+					...character,
+					attributes: {
+						...character.attributes,
+						[attribute]: character.attributes[attribute] + 1,
+					},
+					modifiers: {
+						...character.modifiers,
+						[attribute]: calculateModifier(
+							character.attributes,
+							attribute
+						),
+					}
+				};
+			}
+			return character;
 		});
+		setCharacters(newCharacters);
 	};
 
-	const incrementSkill = (skill) => {
-		if (points > 0) {
-			setSkills({
-				...skills,
-				[skill]: (skills[skill] || 0) + 1,
+	const decrementAttribute = (characterName, attribute) => {
+		const newCharacters = characters.map((character) => {
+			if (character.characterName === characterName) {
+				return {
+					...character,
+					attributes: {
+						...character.attributes,
+						[attribute]: Math.max(
+							0,
+							character.attributes[attribute] - 1
+						),
+					}, modifiers: {
+						...character.modifiers,
+						[attribute]: calculateModifier(
+							character.attributes,
+							attribute
+						),
+					}
+				};
+			}
+			return character;
+		});
+		setCharacters(newCharacters);
+	};
+
+	const incrementSkill = (characterName, skill) => {
+		const newCharacters = characters.map((character) => {
+			if (character.characterName === characterName) {
+				if (character.totalPoints > 0) {
+					return {
+						...character,
+						skills: {
+							...character.skills,
+							[skill]: {
+								"points": (character.skills[skill] || { "points": 0 }).points + 1,
+								"attributeModifier": character.skills[skill].attributeModifier
+							},
+						},
+						totalPoints: character.totalPoints - 1,
+					};
+				}
+			}
+			return character;
+		});
+		setCharacters(newCharacters);
+	};
+
+	const decrementSkill = (characterName, skill) => {
+		const newCharacters = characters.map((character) => {
+			if (character.characterName === characterName) {
+				if ((character.skills[skill] || { "points": 0 }).points > 0) {
+					return {
+						...character,
+						skills: {
+							...character.skills,
+							[skill]: {
+								"points": character.skills[skill].points - 1,
+								"attributeModifier": character.skills[skill].attributeModifier
+							},
+						},
+						totalPoints: character.totalPoints + 1,
+					};
+				}
+			}
+			return character;
+		});
+		setCharacters(newCharacters);
+	};
+
+	const gitHubName = 'christine-aqui';
+	const API_URL = `https://recruiting.verylongdomaintotestwith.ca/api/${gitHubName}/character`;
+	// Fetch the characters from API when the component mounts
+	useEffect(() => {
+		fetch(API_URL)
+			.then(response => response.json())
+			.then(data => {
+				setCharacters(data.body)
+			})
+			.catch(error => console.error('Error:', error));
+	}, []);
+
+	// Save function to save characters to API
+	const saveCharacters = () => {
+		fetch(API_URL, {
+			method: 'POST',
+			headers: {
+				'Content-Type': 'application/json',
+			},
+			body: JSON.stringify(characters),
+		})
+			.then(response => response.json())
+			.then(data => console.log('Success:', data))
+			.catch((error) => {
+				console.error('Error:', error);
 			});
-			setPoints(points - 1);
-		}
-	};
-
-	const decrementSkill = (skill) => {
-		if (skills[skill] > 0) {
-			setSkills({
-				...skills,
-				[skill]: skills[skill] - 1,
-			});
-			setPoints(points + 1);
-		}
-	};
-
+	}
 
 	return (
-		<CharacterContext.Provider value={{
-			attributes, skills, points, incrementAttribute, decrementAttribute, incrementSkill, decrementSkill,
-		}}
+		<CharacterContext.Provider
+			value={{
+				characters: characterModifiers,
+				incrementAttribute,
+				decrementAttribute,
+				incrementSkill,
+				decrementSkill,
+				saveCharacters,
+			}}
 		>
 			{children}
 		</CharacterContext.Provider>

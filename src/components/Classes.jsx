@@ -1,8 +1,6 @@
 import React, { useState, useEffect } from 'react';
-import { useCharacter } from '../contexts/CharactersContext';
 
-const Classes = ({ defaultClassList }) => {
-	const { attributes } = useCharacter();
+const Classes = ({ defaultClassList, characterAttribute }) => {
 	const [eligibleClasses, setEligibleClasses] = useState([]);
 	const [selectedClass, setSelectedClass] = useState(null);
 
@@ -11,13 +9,13 @@ const Classes = ({ defaultClassList }) => {
 		for (const characterClassName in defaultClassList) {
 			const classAttributes = defaultClassList[characterClassName];
 			if (Object.keys(classAttributes).every((attribute) => {
-				return attributes[attribute.toLowerCase()] >= classAttributes[attribute]
+				return characterAttribute[attribute.toLowerCase()] >= classAttributes[attribute]
 			})) {
 				newEligibleClasses.push(characterClassName);
 			}
 		}
 		setEligibleClasses(newEligibleClasses);
-	}, [attributes, defaultClassList]);
+	}, [characterAttribute, defaultClassList]);
 
 	const displayMinimumStats = (className) => {
 		setSelectedClass(className);
