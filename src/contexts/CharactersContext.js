@@ -58,6 +58,10 @@ export function CharacterProvider({ children }) {
 				);
 				const canIncrement = totalPoints < 70;
 
+				if (!canIncrement) {
+					window.alert('Cannot increment attribute. Total points cannot exceed 70.');
+				}
+
 				return {
 					...character,
 					attributes: {

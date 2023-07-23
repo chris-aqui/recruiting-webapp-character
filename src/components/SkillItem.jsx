@@ -58,7 +58,7 @@ const SkillItem = ({
 SkillItem.propTypes = {
 	skill: PropTypes.object.isRequired,
 	skillName: PropTypes.string.isRequired,
-	skillAttributeModifier: PropTypes.number.isRequired,
+	skillAttributeModifier: PropTypes.string.isRequired,
 	skillIncrementSkill: PropTypes.func.isRequired,
 	skillDecrementSkill: PropTypes.func.isRequired,
 	characterName: PropTypes.string.isRequired,

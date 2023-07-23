@@ -45,7 +45,14 @@ function App() {
 
 // PropTypes for the App component
 App.propTypes = {
-  defaultClassList: PropTypes.array.isRequired,
+  defaultClassList: PropTypes.shape({
+    Strength: PropTypes.number,
+    Dexterity: PropTypes.number,
+    Constitution: PropTypes.number,
+    Intelligence: PropTypes.number,
+    Wisdom: PropTypes.number,
+    Charisma: PropTypes.number,
+  })
 };
 
 export default App;
