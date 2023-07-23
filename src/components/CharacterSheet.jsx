@@ -20,11 +20,13 @@ const CharacterSheet = ({ defaultClassList }) => {
 			{characters.map((character, index) => {
 				return (
 					<div key={`${character.characterName}-index-${index}`} className='border border-gray-200 rounded-lg shadow dark:bg-gray-800 dark:border-gray-700' >
-						<h2 className='App-section' >Character Name: {character.characterName}</h2>
+						<h2 className='App-section pt-4' >Character Name: {character.characterName}</h2>
 						<section
-							className="App-section grid gap-4 grid-cols-1 md:grid-cols-3 lg:grid-cols-4 px-4 py-2 md:px-4 md:py-4"
+							className="App-section grid gap-4 grid-cols-4 px-2 py-2 md:px-3 md:py-4"
+							aria-label="Character Sheet Attributes"
 						>
 							<Attributes
+								className="col-span-1"
 								characterAttribute={character.attributes}
 								characterModifier={character.modifiers}
 								incrementAttribute={incrementAttribute}
@@ -32,10 +34,12 @@ const CharacterSheet = ({ defaultClassList }) => {
 								character={character}
 							/>
 							<Classes
+								className="col-span-1"
 								defaultClassList={defaultClassList}
 								characterAttribute={character.attributes}
 							/>
 							<SkillList
+								className="col-span-2"
 								character={character}
 							/>
 						</section>

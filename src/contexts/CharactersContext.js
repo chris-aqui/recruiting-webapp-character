@@ -1,6 +1,8 @@
 import React, { createContext, useState, useContext, useEffect, useReducer } from 'react';
+import { v4 as uuidv4 } from 'uuid';
 import { calculateModifier } from '../utils/calculateModifier.js';
 import { character } from '../utils/character.js'
+import { Character } from '../utils/createCharacter.js';
 
 // Creating a context for character-related data and functions
 // This context will be provided by the CharacterProvider component and can be consumed by any component that needs access to character-related data or functions
@@ -192,6 +194,11 @@ export function CharacterProvider({ children }) {
 		}
 	};
 
+	const addNewCharacter = (name, attributes, skills) => {
+		const newCharacter = new Character(uuidv4());
+		setCharacters(prevCharacters => [...prevCharacters, newCharacter]);
+	};
+
 	// Provide the character-related state and functions to the children of this component
 	return (
 		<CharacterContext.Provider
@@ -202,6 +209,7 @@ export function CharacterProvider({ children }) {
 				incrementSkill,
 				decrementSkill,
 				saveCharacters,
+				addNewCharacter,
 			}}
 		>
 			{children}

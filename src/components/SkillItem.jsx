@@ -30,10 +30,10 @@ const SkillItem = ({
 
 	return (
 		<div className='p-1'>
-			<div>{skillName}: {skillPoint}</div>
-			<div>(Modifier: {skillAttributeModifier}): {modifier}</div>
-			<span>Total: {total}</span>
+			<div>{skillName}: {skillPoint} (Modifier: {skillAttributeModifier}): {modifier}</div>
+			{/* <div>(Modifier: {skillAttributeModifier}): {modifier}</div> */}
 			<div>
+				<span className='pr-1'>Total: {total} </span>
 				<button
 					type="button"
 					aria-label={`Increase ${skillName}`}

@@ -1,14 +1,16 @@
 import './App.css';
-import PropTypes from 'prop-types';
-import { CLASS_LIST } from './consts.js';
 import React from 'react';
+import PropTypes from 'prop-types';
+import { v4 as uuidv4 } from 'uuid';
+import { CLASS_LIST } from './consts.js';
 import CharacterSheet from './components/CharacterSheet';
 import { useCharacter } from './contexts/CharactersContext';
+import { Character } from './utils/createCharacter'
 
 // App is the main functional component of the application.
 // It uses the useCharacter hook to get the saveCharacters function from the CharactersContext.
 function App() {
-  const { saveCharacters } = useCharacter();
+  const { saveCharacters, addNewCharacter } = useCharacter();
 
   return (
     <div className="App">
@@ -28,10 +30,8 @@ function App() {
           type="button"
           aria-label="Add Character"
           className="p-2 text-white bg-blue-700 hover:bg-blue-800 focus:outline-none focus:ring-4 focus:ring-blue-300 font-medium rounded-full text-sm px-5 py-2.5 text-center mr-2 mb-2 dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:ring-blue-800"
-          onClick={() => {
-            console.log('Add Character')
-            // TODO: Add Character
-          }}
+          onClick={addNewCharacter}
+
         >
           Add Character
         </button>
