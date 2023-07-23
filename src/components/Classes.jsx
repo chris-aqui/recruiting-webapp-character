@@ -1,13 +1,10 @@
 import React, { useState, useEffect } from 'react';
-import { useAttributes } from '../contexts/CharactersContext';
+import { useCharacter } from '../contexts/CharactersContext';
 
 const Classes = ({ defaultClassList }) => {
-	const { attributes } = useAttributes();
+	const { attributes } = useCharacter();
 	const [eligibleClasses, setEligibleClasses] = useState([]);
 	const [selectedClass, setSelectedClass] = useState(null);
-	useEffect(() => {
-		console.log('selectedClass', selectedClass);
-	}, [selectedClass]);
 
 	useEffect(() => {
 		const newEligibleClasses = [];
@@ -20,7 +17,7 @@ const Classes = ({ defaultClassList }) => {
 			}
 		}
 		setEligibleClasses(newEligibleClasses);
-	}, [attributes]);
+	}, [attributes, defaultClassList]);
 
 	const displayMinimumStats = (className) => {
 		setSelectedClass(className);

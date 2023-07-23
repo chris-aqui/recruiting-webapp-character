@@ -1,9 +1,9 @@
 import React from 'react';
 import AttributeItem from './AttributeItem.jsx';
-import { useAttributes } from '../contexts/CharactersContext';
+import { useCharacter } from '../contexts/CharactersContext';
 
 const Attributes = ({ defaultAttributeList }) => {
-  const { attributes, incrementAttribute, decrementAttribute } = useAttributes();
+  const { attributes, incrementAttribute, decrementAttribute } = useCharacter();
 
 
   return (
@@ -33,6 +33,7 @@ const Attributes = ({ defaultAttributeList }) => {
           default:
             attributeValue = 10;
         }
+
         return (
           <AttributeItem
             id={`attribute-${attribute}`}
@@ -41,6 +42,7 @@ const Attributes = ({ defaultAttributeList }) => {
             attributeValue={attributeValue}
             handleIncrement={incrementAttribute}
             handleDecrement={decrementAttribute}
+            attributes={attributes}
           />
         )
       })}

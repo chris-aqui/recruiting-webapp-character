@@ -5,10 +5,11 @@ const AttributeItem = ({
 	attributeValue,
 	handleIncrement,
 	handleDecrement,
+	attributes,
 }) => {
 	let modifier;
 	try {
-		modifier = calculateModifier(attributeValue);
+		modifier = calculateModifier(attributes, attributeName);
 	} catch (error) {
 		console.error(error);
 		modifier = 0;
