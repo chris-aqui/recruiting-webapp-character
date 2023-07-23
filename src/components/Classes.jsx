@@ -9,7 +9,7 @@ const Classes = ({ defaultClassList, characterAttribute }) => {
 		for (const characterClassName in defaultClassList) {
 			const classAttributes = defaultClassList[characterClassName];
 			if (Object.keys(classAttributes).every((attribute) => {
-				return characterAttribute[attribute.toLowerCase()] >= classAttributes[attribute]
+				return characterAttribute[attribute.toLowerCase()] > classAttributes[attribute]
 			})) {
 				newEligibleClasses.push(characterClassName);
 			}

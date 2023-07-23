@@ -1,103 +1,22 @@
-import React, { createContext, useState, useContext, useEffect } from 'react';
+import React, { createContext, useState, useContext, useEffect, useReducer } from 'react';
 import { calculateModifier } from '../utils/calculateModifier.js';
+import { character } from '../utils/character.js'
 
+// Creating a context for character-related data and functions
+// This context will be provided by the CharacterProvider component and can be consumed by any component that needs access to character-related data or functions
 const CharacterContext = createContext();
 
+// useCharacter is a custom hook that provides a convenient way for components to consume the CharacterContext
 export function useCharacter() {
 	return useContext(CharacterContext);
 }
 
+// CharacterProvider is a context provider component that provides character-related state and functions to its children.
 export function CharacterProvider({ children }) {
-	const [characters, setCharacters] = useState([
-		{
-			characterName: 'character_1',
-			totalPoints: 18,
-			attributes: {
-				strength: 10,
-				dexterity: 10,
-				constitution: 10,
-				intelligence: 10,
-				wisdom: 10,
-				charisma: 10,
-			},
-			modifiers: {},
-			skills: {
-				"Acrobatics": {
-					"points": 0,
-					"attributeModifier": "Dexterity"
-				},
-				"Animal Handling": {
-					"points": 0,
-					"attributeModifier": "Wisdom"
-				},
-				"Arcana": {
-					"points": 0,
-					"attributeModifier": "Intelligence"
-				},
-				"Athletics": {
-					"points": 0,
-					"attributeModifier": "Strength"
-				},
-				"Deception": {
-					"points": 0,
-					"attributeModifier": "Charisma"
-				},
-				"History": {
-					"points": 0,
-					"attributeModifier": "Intelligence"
-				},
-				"Insight": {
-					"points": 0,
-					"attributeModifier": "Wisdom"
-				},
-				"Intimidation": {
-					"points": 0,
-					"attributeModifier": "Charisma"
-				},
-				"Investigation": {
-					"points": 0,
-					"attributeModifier": "Intelligence"
-				},
-				"Medicine": {
-					"points": 0,
-					"attributeModifier": "Wisdom"
-				},
-				"Nature": {
-					"points": 0,
-					"attributeModifier": "Intelligence"
-				},
-				"Perception": {
-					"points": 0,
-					"attributeModifier": "Wisdom"
-				},
-				"Performance": {
-					"points": 0,
-					"attributeModifier": "Charisma"
-				},
-				"Persuasion": {
-					"points": 0,
-					"attributeModifier": "Charisma"
-				},
-				"Religion": {
-					"points": 0,
-					"attributeModifier": "Intelligence"
-				},
-				"Sleight of Hand": {
-					"points": 0,
-					"attributeModifier": "Dexterity"
-				},
-				"Stealth": {
-					"points": 0,
-					"attributeModifier": "Dexterity"
-				},
-				"Survival": {
-					"points": 0,
-					"attributeModifier": "Wisdom"
-				},
-			},
-		},
-	]);
+	// Initialize characters state with the default character
+	const [characters, setCharacters] = useState([character]);
 
+	// Initialize characterModifiers state by calculating the modifiers for the initial characters
 	const [characterModifiers, setCharacterModifiers] = useState(() => {
 		return characters.map((character) => {
 			const newModifiers = {};
@@ -111,31 +30,39 @@ export function CharacterProvider({ children }) {
 		});
 	});
 
+	// Recalculate the modifiers whenever characters change
 	useEffect(() => {
-		// Calculate the modifiers whenever characters change
-		const newCharacterModifiers = characters.map((character) => {
-			const newModifiers = {};
-			for (const attribute in character.attributes) {
-				newModifiers[attribute] = calculateModifier(
-					character.attributes,
-					attribute
-				);
-			}
-			return { ...character, modifiers: newModifiers };
-		});
+		if (characters) {
+			const newCharacterModifiers = characters.map((character) => {
+				const newModifiers = {};
+				for (const attribute in character.attributes) {
+					newModifiers[attribute] = calculateModifier(
+						character.attributes,
+						attribute
+					);
+				}
+				return { ...character, modifiers: newModifiers };
+			});
 
-		// Update the characterModifiers state
-		setCharacterModifiers(newCharacterModifiers);
+			// Update the characterModifiers state
+			setCharacterModifiers(newCharacterModifiers);
+		}
 	}, [characters]);
 
+	// Function to increment an attribute of a character
 	const incrementAttribute = (characterName, attribute) => {
-		const newCharacters = characters.map((character) => {
+		const newCharacters = characters?.map((character) => {
 			if (character.characterName === characterName) {
+				const totalPoints = Object.values(character.attributes).reduce(
+					(acc, curr) => acc + curr
+				);
+				const canIncrement = totalPoints < 70;
+
 				return {
 					...character,
 					attributes: {
 						...character.attributes,
-						[attribute]: character.attributes[attribute] + 1,
+						[attribute]: canIncrement ? character.attributes[attribute] + 1 : character.attributes[attribute],
 					},
 					modifiers: {
 						...character.modifiers,
@@ -143,7 +70,7 @@ export function CharacterProvider({ children }) {
 							character.attributes,
 							attribute
 						),
-					}
+					},
 				};
 			}
 			return character;
@@ -151,6 +78,7 @@ export function CharacterProvider({ children }) {
 		setCharacters(newCharacters);
 	};
 
+	// Function to decrement an attribute of a character
 	const decrementAttribute = (characterName, attribute) => {
 		const newCharacters = characters.map((character) => {
 			if (character.characterName === characterName) {
@@ -176,6 +104,7 @@ export function CharacterProvider({ children }) {
 		setCharacters(newCharacters);
 	};
 
+	// Function to increment a skill of a character
 	const incrementSkill = (characterName, skill) => {
 		const newCharacters = characters.map((character) => {
 			if (character.characterName === characterName) {
@@ -198,6 +127,7 @@ export function CharacterProvider({ children }) {
 		setCharacters(newCharacters);
 	};
 
+	// Function to decrement a skill of a character
 	const decrementSkill = (characterName, skill) => {
 		const newCharacters = characters.map((character) => {
 			if (character.characterName === characterName) {
@@ -220,34 +150,45 @@ export function CharacterProvider({ children }) {
 		setCharacters(newCharacters);
 	};
 
+	// Define the API URL
 	const gitHubName = 'christine-aqui';
-	const API_URL = `https://recruiting.verylongdomaintotestwith.ca/api/${gitHubName}/character`;
+	const API_URL = `https://recruiting.verylongdomaintotestwith.ca/api/{${gitHubName}}/character`;
+
 	// Fetch the characters from API when the component mounts
 	useEffect(() => {
-		fetch(API_URL)
-			.then(response => response.json())
-			.then(data => {
-				setCharacters(data.body)
-			})
-			.catch(error => console.error('Error:', error));
+		const fetchData = async () => {
+			try {
+				const response = await fetch(API_URL);
+				const data = await response.json();
+				if (data.body.length > 0) {
+					setCharacters(data.body)
+				}
+			} catch (error) {
+				console.error('Error:', error);
+			}
+		};
+		fetchData();
 	}, []);
 
 	// Save function to save characters to API
-	const saveCharacters = () => {
-		fetch(API_URL, {
-			method: 'POST',
-			headers: {
-				'Content-Type': 'application/json',
-			},
-			body: JSON.stringify(characters),
-		})
-			.then(response => response.json())
-			.then(data => console.log('Success:', data))
-			.catch((error) => {
-				console.error('Error:', error);
+	const saveCharacters = async () => {
+		try {
+			const response = await fetch(API_URL, {
+				method: 'POST',
+				headers: {
+					'Content-Type': 'application/json',
+				},
+				body: JSON.stringify(characterModifiers),
 			});
-	}
 
+			const data = await response.json();
+			console.log('Success:', data);
+		} catch (error) {
+			console.error('Error:', error);
+		}
+	};
+
+	// Provide the character-related state and functions to the children of this component
 	return (
 		<CharacterContext.Provider
 			value={{
